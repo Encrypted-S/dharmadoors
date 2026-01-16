@@ -18,17 +18,17 @@ const DefaultIcon = L.icon({
 
 L.Marker.prototype.options.icon = DefaultIcon;
 
-// Tradition color mapping
+// Tradition color mapping (aligned with brand guidelines)
 const TRADITION_COLORS: Record<string, string> = {
-  theravada: "#f59e0b",
-  mahayana: "#3b82f6",
-  vajrayana: "#ef4444",
-  zen: "#22c55e",
-  pure_land: "#3b82f6",
-  nichiren: "#8b5cf6",
-  secular: "#6b7280",
-  multi_tradition: "#ec4899",
-  other: "#6b7280",
+  theravada: "#E97116",      // Saffron Orange (brand primary)
+  mahayana: "#168EE9",       // Wisdom Blue (brand secondary)
+  vajrayana: "#DC4545",      // Lotus Red
+  zen: "#22A55E",            // Bamboo Green
+  pure_land: "#3B82F6",      // Sky Blue
+  nichiren: "#8B5CF6",       // Royal Purple
+  secular: "#6B7280",        // Neutral Gray
+  multi_tradition: "#EC4899", // Harmony Pink
+  other: "#6B7280",          // Neutral Gray
 };
 
 interface Center {
@@ -67,8 +67,8 @@ export default function SanghaMap({ centers, onCenterClick }: SanghaMapProps) {
 
   if (!mapReady) {
     return (
-      <div className="h-full w-full bg-amber-50 dark:bg-zinc-800 animate-pulse flex items-center justify-center">
-        <span className="text-zinc-500">Loading map...</span>
+      <div className="h-full w-full bg-[#F5F3EF] dark:bg-[#1A1714] animate-pulse flex items-center justify-center">
+        <span className="text-[#6B6358]">Loading map...</span>
       </div>
     );
   }
@@ -111,7 +111,7 @@ export default function SanghaMap({ centers, onCenterClick }: SanghaMapProps) {
                   href={center.website}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="block mt-2 text-sm text-amber-600 hover:underline"
+                  className="block mt-2 text-sm text-[#E97116] hover:underline"
                 >
                   Visit Website →
                 </a>
