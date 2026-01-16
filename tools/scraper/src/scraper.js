@@ -388,15 +388,47 @@ class SanghaMapScraper {
   /**
    * Detect organizational affiliation from name and website.
    * Returns { affiliation, concernStatus }
+   *
+   * concernStatus values:
+   * - 'documented': Legitimate Buddhism with documented ethical concerns
+   * - 'not_buddhism': Uses Buddhist imagery but is not recognized as Buddhism
+   * - 'resolved': Had concerns but has implemented reforms
+   * - null: No known concerns
    */
   detectAffiliation(name, website = '') {
     const lower = (name + ' ' + (website || '')).toLowerCase();
 
-    // Organizations with documented concerns (hidden by default)
+    // =========================================================================
+    // NOT BUDDHISM - New Religious Movements using Buddhist imagery
+    // These appear first because they should be clearly distinguished
+    // =========================================================================
+    if (lower.includes('falun') || lower.includes('falun gong') || lower.includes('falun dafa')) {
+      return { affiliation: 'falun_gong', concernStatus: 'not_buddhism' };
+    }
+    if (lower.includes('supreme master') || lower.includes('ching hai') || lower.includes('suma ching hai') ||
+        lower.includes('quan yin method') || lower.includes('loving hut')) {
+      return { affiliation: 'ching_hai', concernStatus: 'not_buddhism' };
+    }
+    if (lower.includes('true buddha') || lower.includes('lu sheng-yen') || lower.includes('grand master lu') ||
+        lower.includes('真佛宗')) {
+      return { affiliation: 'true_buddha', concernStatus: 'not_buddhism' };
+    }
+    if (lower.includes('happy science') || lower.includes('ryuho okawa') || lower.includes('el cantare') ||
+        lower.includes('幸福の科学')) {
+      return { affiliation: 'happy_science', concernStatus: 'not_buddhism' };
+    }
+    if (lower.includes('i-kuan tao') || lower.includes('i kuan tao') || lower.includes('yiguandao') ||
+        lower.includes('一貫道')) {
+      return { affiliation: 'i_kuan_tao', concernStatus: 'not_buddhism' };
+    }
+
+    // =========================================================================
+    // Buddhist organizations with documented concerns (hidden by default)
+    // =========================================================================
     if (lower.includes('shambhala')) {
       return { affiliation: 'shambhala', concernStatus: 'documented' };
     }
-    if (lower.includes('rigpa') && !lower.includes('rigpa')) {
+    if (lower.includes('rigpa') && !lower.includes('dzogchen')) {
       // Be careful - "rigpa" is also a Dzogchen term
       return { affiliation: 'rigpa', concernStatus: 'documented' };
     }
@@ -409,8 +441,13 @@ class SanghaMapScraper {
     if (lower.includes('triratna') || lower.includes('fwbo') || lower.includes('western buddhist order')) {
       return { affiliation: 'triratna', concernStatus: 'documented' };
     }
+    if (lower.includes('dhammakaya') || lower.includes('wat phra dhammakaya') || lower.includes('dhammachayo')) {
+      return { affiliation: 'dhammakaya', concernStatus: 'documented' };
+    }
 
-    // Organizations without documented concerns
+    // =========================================================================
+    // Buddhist organizations without documented concerns
+    // =========================================================================
     if (lower.includes('fpmt') || lower.includes('foundation for the preservation')) {
       return { affiliation: 'fpmt', concernStatus: null };
     }
@@ -431,6 +468,9 @@ class SanghaMapScraper {
     }
     if (lower.includes('sgi') || lower.includes('soka gakkai')) {
       return { affiliation: 'sgi', concernStatus: null };
+    }
+    if (lower.includes('dzogchen community') || lower.includes('namkhai norbu')) {
+      return { affiliation: 'dzogchen', concernStatus: null };
     }
 
     return { affiliation: null, concernStatus: null };

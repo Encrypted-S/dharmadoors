@@ -99,6 +99,81 @@ The following organizations have documented ethical concerns. This does not mean
 
 ---
 
+## Groups That Are Not Buddhism
+
+Some groups use Buddhist terminology or imagery but are not recognized as Buddhist traditions by mainstream Buddhist federations. These are listed separately because:
+
+1. **They may explicitly say they're not Buddhism** (e.g., Falun Gong)
+2. **They've been rejected by Buddhist authorities** (e.g., True Buddha School)
+3. **They're syncretic religions** that mix Buddhism with other traditions
+
+This is not a judgment on individual practitioners. If you're specifically looking for Buddhist practice, these groups may not be what you're seeking. If you're interested in them for their own merits, that's a personal choice.
+
+### Falun Gong (Falun Dafa)
+
+**Status:** Not Buddhism
+
+**What it is:** A spiritual practice founded by Li Hongzhi in 1992 in China, combining qigong exercises with moral teachings. Li Hongzhi has explicitly stated that Falun Gong is not Buddhism.
+
+**Why it's listed separately:** Falun Gong itself does not claim to be Buddhism, despite using some Buddhist terminology and imagery.
+
+**Sources:**
+- [BBC: What is Falun Gong?](https://www.bbc.com/news/world-asia-china-35993423)
+
+---
+
+### Supreme Master Ching Hai
+
+**Status:** Not Buddhism
+
+**What it is:** A syncretic new religious movement founded by Ching Hai (born Hue Dang Trinh) that combines elements of Buddhism, Christianity, Islam, and other traditions. Known for the Quan Yin Method of meditation and the Loving Hut vegan restaurant chain.
+
+**Why it's listed separately:** Not recognized as a Buddhist tradition by Buddhist federations. The organization's teachings deviate significantly from established Buddhist schools.
+
+**Sources:**
+- [Vice: Inside Supreme Master Ching Hai's Organization](https://www.vice.com/en/article/the-vegan-cult-supreme-master-ching-hai/)
+
+---
+
+### True Buddha School
+
+**Status:** Not Buddhism
+
+**What it is:** A religious movement founded by Lu Sheng-yen (盧勝彥) in Taiwan in 1982. Lu claims to be a living Buddha and has developed an elaborate spiritual cosmology.
+
+**Why it's listed separately:** Rejected by major Buddhist federations including the Buddhist Association of the Republic of China. Lu's claims of Buddhahood are not accepted by established Buddhist authorities.
+
+**Sources:**
+- [Wikipedia: True Buddha School](https://en.wikipedia.org/wiki/True_Buddha_School)
+
+---
+
+### Happy Science (幸福の科学)
+
+**Status:** Not Buddhism
+
+**What it is:** A Japanese new religious movement founded by Ryuho Okawa in 1986. Okawa claims to be the incarnation of El Cantare, a supreme being, and also the reincarnation of the Buddha, Jesus, and other religious figures.
+
+**Why it's listed separately:** While incorporating Buddhist concepts, Happy Science's claims about Okawa's divine status place it outside recognized Buddhist traditions.
+
+**Sources:**
+- [The Guardian: Happy Science Cult Film](https://www.theguardian.com/world/2017/oct/13/happy-science-cult-film-japan)
+
+---
+
+### I-Kuan Tao (一貫道)
+
+**Status:** Not Buddhism (Syncretic Religion)
+
+**What it is:** A Chinese religious movement that emerged in the early 20th century, combining elements of Confucianism, Taoism, and Buddhism. It has its own distinct practices and hierarchy.
+
+**Why it's listed separately:** While I-Kuan Tao respects Buddhist elements, it is a distinct syncretic religion with its own theological framework, not a school of Buddhism.
+
+**Sources:**
+- [Wikipedia: I-Kuan Tao](https://en.wikipedia.org/wiki/I-Kuan_Tao)
+
+---
+
 ## Red Flags to Watch For
 
 Regardless of affiliation, here are warning signs to be aware of when evaluating any spiritual community:
