@@ -268,13 +268,17 @@ class SanghaMapScraper {
     // Parse address into components
     const addressParts = this.parseAddress(details.fullAddress);
 
-    // Detect tradition from name
+    // Detect tradition and affiliation from name
     const tradition = this.detectTradition(details.name);
     const centerType = this.detectCenterType(details.name);
+    const { affiliation, concernStatus } = this.detectAffiliation(details.name, details.website);
 
     console.log(`   ✓ ${details.name}`);
     if (details.fullAddress) {
       console.log(`     📫 ${details.fullAddress}`);
+    }
+    if (affiliation) {
+      console.log(`     🏷️ ${affiliation}${concernStatus ? ' ⚠️' : ''}`);
     }
 
     return {
@@ -296,6 +300,8 @@ class SanghaMapScraper {
       google_maps_url: details.url,
       detected_tradition: tradition,
       detected_type: centerType,
+      affiliation: affiliation,
+      concern_status: concernStatus,
       opening_hours: details.openingHours,
     };
   }
@@ -377,6 +383,57 @@ class SanghaMapScraper {
     }
 
     return 'center'; // Default
+  }
+
+  /**
+   * Detect organizational affiliation from name and website.
+   * Returns { affiliation, concernStatus }
+   */
+  detectAffiliation(name, website = '') {
+    const lower = (name + ' ' + (website || '')).toLowerCase();
+
+    // Organizations with documented concerns (hidden by default)
+    if (lower.includes('shambhala')) {
+      return { affiliation: 'shambhala', concernStatus: 'documented' };
+    }
+    if (lower.includes('rigpa') && !lower.includes('rigpa')) {
+      // Be careful - "rigpa" is also a Dzogchen term
+      return { affiliation: 'rigpa', concernStatus: 'documented' };
+    }
+    if (lower.includes('kadampa') || lower.includes('nkt') || lower.includes('new kadampa')) {
+      return { affiliation: 'nkt', concernStatus: 'documented' };
+    }
+    if (lower.includes('diamond way') || lower.includes('ole nydahl')) {
+      return { affiliation: 'diamond_way', concernStatus: 'documented' };
+    }
+    if (lower.includes('triratna') || lower.includes('fwbo') || lower.includes('western buddhist order')) {
+      return { affiliation: 'triratna', concernStatus: 'documented' };
+    }
+
+    // Organizations without documented concerns
+    if (lower.includes('fpmt') || lower.includes('foundation for the preservation')) {
+      return { affiliation: 'fpmt', concernStatus: null };
+    }
+    if (lower.includes('plum village') || lower.includes('thich nhat hanh') || lower.includes('thay')) {
+      return { affiliation: 'plum_village', concernStatus: null };
+    }
+    if (lower.includes('goenka') || lower.includes('vipassana.dhamma')) {
+      return { affiliation: 'goenka', concernStatus: null };
+    }
+    if (lower.includes('spirit rock')) {
+      return { affiliation: 'spirit_rock', concernStatus: null };
+    }
+    if (lower.includes('insight meditation society') || lower.includes('ims barre')) {
+      return { affiliation: 'ims', concernStatus: null };
+    }
+    if (lower.includes('tergar') || lower.includes('mingyur rinpoche')) {
+      return { affiliation: 'tergar', concernStatus: null };
+    }
+    if (lower.includes('sgi') || lower.includes('soka gakkai')) {
+      return { affiliation: 'sgi', concernStatus: null };
+    }
+
+    return { affiliation: null, concernStatus: null };
   }
 
   async scrape() {

@@ -86,10 +86,10 @@ class Database {
         latitude, longitude,
         phone, website,
         google_rating, review_count, google_maps_url,
-        detected_tradition, detected_type,
+        detected_tradition, detected_type, affiliation, concern_status,
         opening_hours,
         search_term, search_location
-      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     `;
 
     const params = [
@@ -111,6 +111,8 @@ class Database {
       center.google_maps_url,
       center.detected_tradition,
       center.detected_type,
+      center.affiliation,
+      center.concern_status,
       center.opening_hours ? JSON.stringify(center.opening_hours) : null,
       center.search_term,
       center.search_location,
@@ -218,6 +220,12 @@ class Database {
     const byTradition = await this.all(
       `SELECT detected_tradition, COUNT(*) as count FROM centers WHERE detected_tradition IS NOT NULL GROUP BY detected_tradition ORDER BY count DESC`
     );
+    const byAffiliation = await this.all(
+      `SELECT affiliation, COUNT(*) as count FROM centers WHERE affiliation IS NOT NULL GROUP BY affiliation ORDER BY count DESC`
+    );
+    const withConcerns = await this.get(
+      `SELECT COUNT(*) as count FROM centers WHERE concern_status = 'documented'`
+    );
     const searchProgress = await this.get(
       `SELECT
         COUNT(*) as total,
@@ -230,6 +238,8 @@ class Database {
       totalCenters: centers.count,
       byCountry,
       byTradition,
+      byAffiliation,
+      withConcerns: withConcerns.count,
       searchProgress,
     };
   }

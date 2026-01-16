@@ -84,6 +84,85 @@ export const OFFERINGS: Record<Offering, string> = {
 };
 
 // =============================================================================
+// Affiliations & Ethical Concerns
+// =============================================================================
+
+/**
+ * Known organizational affiliations.
+ * Some organizations have documented ethical concerns - these are flagged
+ * to help users make informed decisions, not to censor.
+ */
+export type Affiliation =
+  | 'shambhala'
+  | 'rigpa'
+  | 'nkt'           // New Kadampa Tradition
+  | 'diamond_way'   // Ole Nydahl
+  | 'triratna'      // Formerly FWBO
+  | 'sgi'           // Soka Gakkai International
+  | 'fpmt'          // Foundation for the Preservation of the Mahayana Tradition
+  | 'plum_village'  // Thich Nhat Hanh
+  | 'goenka'        // S.N. Goenka Vipassana
+  | 'spirit_rock'
+  | 'ims'           // Insight Meditation Society
+  | 'dzogchen'
+  | 'tergar'        // Mingyur Rinpoche
+  | 'other'
+  | null;
+
+export type ConcernStatus = 'documented' | 'resolved' | null;
+
+/**
+ * Organizations with documented ethical concerns.
+ * Criteria: Published journalism, legal findings, or formal investigations.
+ * This is not a judgment on practitioners - many wonderful people practice
+ * in these traditions. It's transparency for informed choice.
+ */
+export const ORGANIZATIONS_WITH_CONCERNS: Record<string, {
+  affiliation: Affiliation;
+  summary: string;
+  sources: string[];
+}> = {
+  shambhala: {
+    affiliation: 'shambhala',
+    summary: 'Sexual misconduct allegations against Sakyong Mipham Rinpoche documented in Buddhist Project Sunshine reports (2018-2019). Organization underwent leadership changes.',
+    sources: [
+      'https://www.lionsroar.com/buddhist-project-sunshine-releases-phase-3-report/',
+      'https://www.nytimes.com/2018/07/11/nyregion/shambhala-sexual-misconduct.html',
+    ],
+  },
+  rigpa: {
+    affiliation: 'rigpa',
+    summary: 'Physical and sexual abuse by Sogyal Rinpoche documented in open letter by eight senior students (2017) and independent investigation (2018).',
+    sources: [
+      'https://www.theguardian.com/world/2017/jul/21/buddhist-teacher-sogyal-rinpoche-accused-of-abuse',
+      'https://www.lionsroar.com/rigpa-sangha-releases-findings-of-investigation/',
+    ],
+  },
+  nkt: {
+    affiliation: 'nkt',
+    summary: 'Concerns about cult-like practices, suppression of dissent, Shugden controversy, and allegations of high-pressure tactics. Disputed by the organization.',
+    sources: [
+      'https://www.theguardian.com/commentisfree/belief/2012/jul/16/new-kadampa-tradition-accusations',
+      'https://newkadampatradition-controversy.info/',
+    ],
+  },
+  diamond_way: {
+    affiliation: 'diamond_way',
+    summary: 'Concerns about Ole Nydahl\'s political statements, personality cult dynamics, and deviation from traditional Karma Kagyu teachings.',
+    sources: [
+      'https://www.lionsroar.com/ole-nydahl-the-karma-kagyu-and-the-controversy/',
+    ],
+  },
+  triratna: {
+    affiliation: 'triratna',
+    summary: 'Historical allegations of sexual exploitation by founder Sangharakshita (Dennis Lingwood). Organization has acknowledged past harm and implemented safeguarding.',
+    sources: [
+      'https://www.theguardian.com/world/2019/sep/21/sangharakshita-triratna-buddhist-founder-abuse-allegations',
+    ],
+  },
+};
+
+// =============================================================================
 // Center
 // =============================================================================
 
@@ -110,6 +189,8 @@ export interface Center {
   description?: string;
   tradition: Tradition;
   subTradition?: string;
+  affiliation?: Affiliation;
+  concernStatus?: ConcernStatus;
   languages: string[];
   offerings: Offering[];
 
@@ -147,6 +228,7 @@ export interface CenterInput {
   description?: string;
   tradition: Tradition;
   subTradition?: string;
+  affiliation?: Affiliation;
   languages?: string[];
   offerings?: Offering[];
   wheelchairAccessible?: boolean;
@@ -164,9 +246,11 @@ export interface CentersSearchParams {
   lng?: number;
   radius?: number; // km
   tradition?: Tradition;
+  affiliation?: Affiliation;
   offerings?: Offering[];
   country?: string;
   q?: string; // text search
+  includeConcerns?: boolean; // false by default - must opt-in to see centers with documented concerns
   limit?: number;
   offset?: number;
 }

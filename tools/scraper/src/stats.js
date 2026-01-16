@@ -37,6 +37,20 @@ async function showStats() {
     console.log('');
   }
 
+  if (stats.byAffiliation && stats.byAffiliation.length > 0) {
+    console.log('🏷️ By Affiliation:');
+    stats.byAffiliation.forEach(({ affiliation, count }) => {
+      console.log(`   ${affiliation}: ${count.toLocaleString()}`);
+    });
+    console.log('');
+  }
+
+  if (stats.withConcerns > 0) {
+    console.log(`⚠️ Centers with documented concerns: ${stats.withConcerns}`);
+    console.log('   (Hidden by default in UI - requires opt-in to view)');
+    console.log('');
+  }
+
   console.log('═'.repeat(60));
 
   await db.close();

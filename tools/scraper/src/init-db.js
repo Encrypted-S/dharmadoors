@@ -50,6 +50,8 @@ CREATE TABLE IF NOT EXISTS centers (
   -- Classification
   detected_tradition TEXT,
   detected_type TEXT,  -- temple, monastery, center, etc.
+  affiliation TEXT,    -- shambhala, rigpa, nkt, fpmt, etc.
+  concern_status TEXT, -- 'documented' | 'resolved' | null
 
   -- Opening hours (JSON)
   opening_hours TEXT,
@@ -70,6 +72,8 @@ CREATE TABLE IF NOT EXISTS centers (
 CREATE INDEX IF NOT EXISTS idx_centers_place_id ON centers(google_place_id);
 CREATE INDEX IF NOT EXISTS idx_centers_country ON centers(country);
 CREATE INDEX IF NOT EXISTS idx_centers_tradition ON centers(detected_tradition);
+CREATE INDEX IF NOT EXISTS idx_centers_affiliation ON centers(affiliation);
+CREATE INDEX IF NOT EXISTS idx_centers_concern ON centers(concern_status);
 CREATE INDEX IF NOT EXISTS idx_centers_coords ON centers(latitude, longitude);
 
 -- Scraping progress tracking (for overnight runs)
