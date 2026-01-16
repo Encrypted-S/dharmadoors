@@ -1,6 +1,86 @@
+"use client";
+
 import Link from "next/link";
+import { useState } from "react";
+import { SanghaMapDynamic } from "@/components/map";
+
+// Sample centers for initial demo - AU/NZ focus
+const SAMPLE_CENTERS = [
+  {
+    id: "1",
+    name: "Bodhinyana Monastery",
+    latitude: -34.4108,
+    longitude: 116.0683,
+    tradition: "theravada",
+    city: "Serpentine",
+    country: "Australia",
+    website: "https://bswa.org/location/bodhinyana-monastery/",
+  },
+  {
+    id: "2",
+    name: "Nan Tien Temple",
+    latitude: -34.4769,
+    longitude: 150.8577,
+    tradition: "mahayana",
+    city: "Wollongong",
+    country: "Australia",
+    website: "https://www.nantien.org.au/",
+  },
+  {
+    id: "3",
+    name: "Sydney Zen Centre",
+    latitude: -33.8888,
+    longitude: 151.1783,
+    tradition: "zen",
+    city: "Annandale",
+    country: "Australia",
+    website: "https://szc.org.au/",
+  },
+  {
+    id: "4",
+    name: "Tara Institute",
+    latitude: -37.8544,
+    longitude: 145.0073,
+    tradition: "vajrayana",
+    city: "Brighton East",
+    country: "Australia",
+    website: "https://tarainstitute.org.au/",
+  },
+  {
+    id: "5",
+    name: "Auckland Buddhist Centre",
+    latitude: -36.8619,
+    longitude: 174.7668,
+    tradition: "multi_tradition",
+    city: "Auckland",
+    country: "New Zealand",
+    website: "https://aucklandbuddhistcentre.org/",
+  },
+  {
+    id: "6",
+    name: "Bodhinyanarama Monastery",
+    latitude: -41.1969,
+    longitude: 175.0075,
+    tradition: "theravada",
+    city: "Stokes Valley",
+    country: "New Zealand",
+    website: "https://bodhinyanarama.net.nz/",
+  },
+];
 
 export default function SanghaMapPage() {
+  const [selectedTradition, setSelectedTradition] = useState<string>("");
+  const [searchQuery, setSearchQuery] = useState("");
+
+  // Filter centers based on selection
+  const filteredCenters = SAMPLE_CENTERS.filter((center) => {
+    const matchesTradition = !selectedTradition || center.tradition === selectedTradition;
+    const matchesSearch = !searchQuery ||
+      center.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      center.city?.toLowerCase().includes(searchQuery.toLowerCase());
+    return matchesTradition && matchesSearch;
+  });
+
   return (
     <div className="min-h-screen bg-zinc-50 dark:bg-zinc-900">
       {/* Header */}
@@ -26,7 +106,7 @@ export default function SanghaMapPage() {
         </div>
       </header>
 
-      {/* Main Content - Map Placeholder */}
+      {/* Main Content */}
       <main className="container mx-auto px-4 py-8">
         <div className="grid lg:grid-cols-4 gap-6">
           {/* Filters Sidebar */}
@@ -44,6 +124,8 @@ export default function SanghaMapPage() {
                 <input
                   type="text"
                   placeholder="Search by name or location..."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
                   className="w-full px-3 py-2 border border-zinc-300 dark:border-zinc-600 rounded-lg bg-white dark:bg-zinc-700 text-zinc-900 dark:text-white placeholder-zinc-400"
                 />
               </div>
@@ -53,7 +135,11 @@ export default function SanghaMapPage() {
                 <label className="block text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-2">
                   Tradition
                 </label>
-                <select className="w-full px-3 py-2 border border-zinc-300 dark:border-zinc-600 rounded-lg bg-white dark:bg-zinc-700 text-zinc-900 dark:text-white">
+                <select
+                  value={selectedTradition}
+                  onChange={(e) => setSelectedTradition(e.target.value)}
+                  className="w-full px-3 py-2 border border-zinc-300 dark:border-zinc-600 rounded-lg bg-white dark:bg-zinc-700 text-zinc-900 dark:text-white"
+                >
                   <option value="">All Traditions</option>
                   <option value="theravada">Theravada</option>
                   <option value="mahayana">Mahayana</option>
@@ -61,6 +147,7 @@ export default function SanghaMapPage() {
                   <option value="zen">Zen/Chan</option>
                   <option value="pure_land">Pure Land</option>
                   <option value="secular">Secular</option>
+                  <option value="multi_tradition">Multi-tradition</option>
                 </select>
               </div>
 
@@ -68,44 +155,40 @@ export default function SanghaMapPage() {
               <button className="w-full px-4 py-2 bg-zinc-100 dark:bg-zinc-700 hover:bg-zinc-200 dark:hover:bg-zinc-600 text-zinc-700 dark:text-zinc-300 rounded-lg font-medium transition-colors flex items-center justify-center gap-2">
                 📍 Near Me
               </button>
+
+              {/* Quick Stats */}
+              <div className="mt-6 pt-6 border-t border-zinc-200 dark:border-zinc-700">
+                <h3 className="text-sm font-medium text-zinc-500 dark:text-zinc-400 mb-3">
+                  Coverage
+                </h3>
+                <div className="space-y-2 text-sm">
+                  <div className="flex justify-between">
+                    <span className="text-zinc-600 dark:text-zinc-400">Australia</span>
+                    <span className="font-medium text-zinc-900 dark:text-white">4 centers</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-zinc-600 dark:text-zinc-400">New Zealand</span>
+                    <span className="font-medium text-zinc-900 dark:text-white">2 centers</span>
+                  </div>
+                </div>
+              </div>
             </div>
           </aside>
 
           {/* Map Area */}
           <div className="lg:col-span-3">
             <div className="bg-white dark:bg-zinc-800 rounded-xl shadow-sm overflow-hidden">
-              {/* Map Placeholder */}
-              <div className="h-[600px] bg-gradient-to-br from-amber-100 to-amber-50 dark:from-zinc-700 dark:to-zinc-800 flex items-center justify-center">
-                <div className="text-center p-8">
-                  <div className="text-6xl mb-4">🗺️</div>
-                  <h3 className="text-2xl font-bold text-zinc-800 dark:text-zinc-200 mb-2">
-                    Map Coming Soon
-                  </h3>
-                  <p className="text-zinc-600 dark:text-zinc-400 max-w-md">
-                    Interactive Leaflet map will appear here, showing Buddhist
-                    centers across Australia and New Zealand to start.
-                  </p>
-                  <div className="mt-6 flex flex-wrap justify-center gap-2">
-                    <span className="px-3 py-1 bg-amber-200 dark:bg-amber-900 text-amber-800 dark:text-amber-200 rounded-full text-sm">
-                      🧘 Theravada
-                    </span>
-                    <span className="px-3 py-1 bg-red-200 dark:bg-red-900 text-red-800 dark:text-red-200 rounded-full text-sm">
-                      🏔️ Tibetan
-                    </span>
-                    <span className="px-3 py-1 bg-green-200 dark:bg-green-900 text-green-800 dark:text-green-200 rounded-full text-sm">
-                      🎋 Zen
-                    </span>
-                    <span className="px-3 py-1 bg-blue-200 dark:bg-blue-900 text-blue-800 dark:text-blue-200 rounded-full text-sm">
-                      🪷 Pure Land
-                    </span>
-                  </div>
-                </div>
+              <div className="h-[600px]">
+                <SanghaMapDynamic
+                  centers={filteredCenters}
+                  onCenterClick={(center) => console.log("Clicked:", center)}
+                />
               </div>
             </div>
 
             {/* Results Count */}
             <div className="mt-4 text-sm text-zinc-500 dark:text-zinc-400">
-              Showing 0 centers • Add yours to help others find their sangha!
+              Showing {filteredCenters.length} center{filteredCenters.length !== 1 ? 's' : ''} • Add yours to help others find their sangha!
             </div>
           </div>
         </div>
