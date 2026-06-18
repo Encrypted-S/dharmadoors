@@ -4,7 +4,7 @@ import { useState, useEffect, useCallback, useRef } from "react";
 import { X } from "lucide-react";
 import { MoonPhaseSvg } from "./MoonPhaseSvg";
 import { getMoonPhase } from "@/lib/moonPhase";
-import { recordSession } from "@/lib/streak";
+import { recordSession, getTodayMinutes } from "@/lib/streak";
 
 const DURATIONS = [5, 10, 15, 20, 30, 45];
 const BELLS = [
@@ -37,11 +37,16 @@ export function MeditationTimer({ onClose }: MeditationTimerProps) {
   });
   const [state, setState] = useState<TimerState>("setup");
   const [remaining, setRemaining] = useState(0);
+  const [todayMinutes, setTodayMinutes] = useState(0);
   const startTimeRef = useRef(0);
   const totalMsRef = useRef(0);
   const pausedElapsedRef = useRef(0);
   const frameRef = useRef<number>(0);
   const wakeLockRef = useRef<WakeLockSentinel | null>(null);
+  // Guards against recording a session twice (e.g. completes, then unmount fires).
+  const recordedRef = useRef(false);
+  // Latest finalize fn, so the unmount cleanup can call it without a stale closure.
+  const finalizeRef = useRef<() => void>(() => {});
 
   const moonPhase = getMoonPhase(new Date());
 
@@ -78,14 +83,16 @@ export function MeditationTimer({ onClose }: MeditationTimerProps) {
 
     if (remain <= 0) {
       setState("complete");
-      recordSession();
+      recordedRef.current = true;
+      recordSession(duration);
+      setTodayMinutes(getTodayMinutes());
       releaseWakeLock();
       // Bell sound would play here
       return;
     }
 
     frameRef.current = requestAnimationFrame(tickRef.current);
-  }, [state]);
+  }, [state, duration]);
 
   useEffect(() => {
     tickRef.current = tick;
@@ -101,6 +108,7 @@ export function MeditationTimer({ onClose }: MeditationTimerProps) {
     totalMsRef.current = duration * 60 * 1000;
     startTimeRef.current = Date.now();
     pausedElapsedRef.current = 0;
+    recordedRef.current = false;
     setRemaining(totalMsRef.current);
     setState("running");
     acquireWakeLock();
@@ -124,9 +132,40 @@ export function MeditationTimer({ onClose }: MeditationTimerProps) {
     else if (state === "paused") resumeTimer();
   }
 
-  // Cleanup on unmount
+  // How long the sitter has actually been sitting right now (ms).
+  function currentElapsedMs(): number {
+    if (state === "running") {
+      return Date.now() - startTimeRef.current + pausedElapsedRef.current;
+    }
+    if (state === "paused") {
+      return pausedElapsedRef.current;
+    }
+    return 0;
+  }
+
+  // Record an early-ended sit (close button, back gesture, leaving the page).
+  // Only counts if they sat at least a minute, and never double-records.
+  function finalizePartialSession() {
+    if (recordedRef.current) return;
+    const ms = currentElapsedMs();
+    if (ms >= 60_000) {
+      recordedRef.current = true;
+      recordSession(ms / 60_000);
+      setTodayMinutes(getTodayMinutes());
+    }
+  }
+
+  // Keep the unmount handler pointed at the latest finalize (avoids stale state).
   useEffect(() => {
-    return () => releaseWakeLock();
+    finalizeRef.current = finalizePartialSession;
+  });
+
+  // Cleanup on unmount — capture a partial sit if they navigated away mid-session.
+  useEffect(() => {
+    return () => {
+      finalizeRef.current();
+      releaseWakeLock();
+    };
   }, []);
 
   const minutes = Math.floor(remaining / 60000);
@@ -137,6 +176,7 @@ export function MeditationTimer({ onClose }: MeditationTimerProps) {
       {/* Close button */}
       <button
         onClick={() => {
+          finalizePartialSession();
           releaseWakeLock();
           onClose();
         }}
@@ -268,8 +308,12 @@ export function MeditationTimer({ onClose }: MeditationTimerProps) {
             Session complete
           </h2>
 
-          <p className="text-base text-[var(--color-warm-gray)] mb-10">
+          <p className="text-base text-[var(--color-warm-gray)] mb-2">
             {duration} minutes of practice
+          </p>
+
+          <p className="text-sm font-medium text-[var(--color-saffron)] mb-10">
+            {todayMinutes} {todayMinutes === 1 ? "minute" : "minutes"} sat today
           </p>
 
           <button

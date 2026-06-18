@@ -2,16 +2,18 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import { getStreak } from "@/lib/streak";
+import { getStreak, getTodayMinutes } from "@/lib/streak";
 
 export function StreakAndSit() {
   const [streak, setStreak] = useState(0);
+  const [todayMinutes, setTodayMinutes] = useState(0);
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
     const data = getStreak();
     // eslint-disable-next-line react-hooks/set-state-in-effect
     setStreak(data.currentStreak);
+    setTodayMinutes(getTodayMinutes());
     setMounted(true);
   }, []);
 
@@ -36,6 +38,9 @@ export function StreakAndSit() {
         </p>
         <p className="text-xs text-[var(--color-warm-gray)] mt-1">
           {streak > 0 ? "Current streak" : "Start your practice"}
+        </p>
+        <p className="text-sm font-medium text-[var(--foreground)] mt-3">
+          {todayMinutes > 0 ? `${todayMinutes} min sat today` : "No sitting yet today"}
         </p>
       </div>
 
